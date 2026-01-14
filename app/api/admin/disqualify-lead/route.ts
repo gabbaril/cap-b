@@ -18,12 +18,8 @@ const defaultReminderAfterCta =
 const normalizeReminderBody = (text: string) => {
   const t = (text ?? "").trim()
 
-  // 1) Retire "Bonjour ..." au début
-  const noHello = t.replace(/^\s*Bonjour\s*(?:[^,\n]{0,40})?\s*,?\s*/i, "").trim()
-
-  // 2) Coupe tout ce qui commence à "N.B." (peu importe où il apparaît)
-  const idx = noHello.toLowerCase().indexOf("n.b.")
-  const mainOnly = idx >= 0 ? noHello.slice(0, idx).trim() : noHello
+  const idx = t.toLowerCase().indexOf("n.b.")
+  const mainOnly = idx >= 0 ? t.slice(0, idx).trim() : t
 
   return mainOnly
 }
