@@ -13,16 +13,15 @@ const supabaseAdmin = createClient(
 )
 
 export async function DELETE(
-  req: Request,
-  { params }: { params: { id: string } }
+  _req: Request,
+  context: { params: Promise<{ id: string }> }
 ) {
-  const userId = params.id
+  const params = await context.params
+  console.log("Route hit!", params)
 
+  const userId = params.id
   if (!userId) {
-    return NextResponse.json(
-      { error: "User ID missing" },
-      { status: 400 }
-    )
+    return NextResponse.json({ error: "User ID missing" }, { status: 400 })
   }
 
   try {
@@ -30,18 +29,12 @@ export async function DELETE(
 
     if (error) {
       console.error("Supabase delete error:", error)
-      return NextResponse.json(
-        { error: error.message },
-        { status: 500 }
-      )
+      return NextResponse.json({ error: error.message }, { status: 500 })
     }
 
     return NextResponse.json({ success: true })
-  } catch (error) {
-    console.error("Delete user error:", error)
-    return NextResponse.json(
-      { error: "Erreur serveur" },
-      { status: 500 }
-    )
+  } catch (err) {
+    console.error("Delete user error:", err)
+    return NextResponse.json({ error: "Erreur serveur" }, { status: 500 })
   }
 }
