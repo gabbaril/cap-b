@@ -42,7 +42,7 @@ interface LeadDrawerProps {
   lead: Lead | null
   brokers: Broker[]
   onViewDetails: (leadId: string) => void
-  handleAssignLead: (leadId: string, brokerId: string) => void
+  handleAssignLead: (leadId: string, brokerId: string | null) => void
   onDisqualify: (lead: Lead) => void
   onOpenEcm: (lead: Lead) => void
   getStatusColor: (status: string) => string
@@ -59,7 +59,7 @@ export function LeadDrawer({
   onOpenEcm,
   getStatusColor,
 }: LeadDrawerProps) {
-  const [selectedBroker, setSelectedBroker] = useState("")
+  const [selectedBroker, setSelectedBroker] = useState<string | "none">("")
   const [activeTab, setActiveTab] = useState("resume")
 
   if (!lead) return null
@@ -287,7 +287,13 @@ export function LeadDrawer({
                     <SelectTrigger className="w-full">
                       <SelectValue placeholder="Sélectionner un courtier..." />
                     </SelectTrigger>
+
                     <SelectContent>
+                      {/* Unassign option */}
+                      <SelectItem value="none">
+                        Aucun (désassigner)
+                      </SelectItem>
+
                       {brokers
                         .filter((b) => b.is_active)
                         .map((broker) => (
@@ -300,15 +306,19 @@ export function LeadDrawer({
                   <Button
                     className="w-full bg-[#E30613] hover:bg-[#C00510]"
                     onClick={() => {
-                      if (selectedBroker) {
-                        handleAssignLead(lead.id, selectedBroker)
-                        setSelectedBroker("")
-                        onOpenChange(false)
-                      }
+                      if (!selectedBroker) return
+
+                      handleAssignLead(
+                        lead.id,
+                        selectedBroker === "none" ? null : selectedBroker
+                      )
+
+                      setSelectedBroker("")
+                      onOpenChange(false)
                     }}
                     disabled={!selectedBroker}
                   >
-                    Assigner ce lead
+                    {selectedBroker === "none" ? "Désassigner ce lead" : "Assigner ce lead"}
                   </Button>
                 </div>
               </div>

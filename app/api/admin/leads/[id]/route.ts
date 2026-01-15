@@ -4,14 +4,16 @@ import { createClient } from "@supabase/supabase-js"
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
 
-export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
     const { id } = await params
     console.log("[v0] Fetching lead details for ID:", id)
 
     const supabase = createClient(supabaseUrl, supabaseServiceKey)
 
-    // Récupérer le lead avec toutes ses informations
     const { data: lead, error } = await supabase
       .from("leads")
       .select(`
@@ -26,15 +28,65 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       .eq("id", id)
       .single()
 
-    if (error) {
+    if (error || !lead) {
       console.error("[v0] Error fetching lead:", error)
       return NextResponse.json({ error: "Lead not found" }, { status: 404 })
     }
 
-    console.log("[v0] Lead fetched successfully:", lead?.lead_number)
     return NextResponse.json(lead)
   } catch (error) {
-    console.error("[v0] Error in lead details API:", error)
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 })
+    console.error("[v0] Error in lead GET API:", error)
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    )
+  }
+}
+
+export async function PATCH(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id } = await params
+    const { brokerId } = (await request.json()) as {
+      brokerId?: string | null
+    }
+
+    const supabase = createClient(supabaseUrl, supabaseServiceKey)
+
+    const updates =
+      brokerId
+        ? {
+            assigned_to: brokerId,
+            status: "assigned",
+            assigned_at: new Date().toISOString(),
+          }
+        : {
+            assigned_to: null,
+            status: "new",
+            assigned_at: null,
+          }
+
+    const { error } = await supabase
+      .from("leads")
+      .update(updates)
+      .eq("id", id)
+
+    if (error) {
+      console.error("[v0] Error updating lead:", error)
+      return NextResponse.json(
+        { ok: false, error: error.message },
+        { status: 500 }
+      )
+    }
+
+    return NextResponse.json({ ok: true })
+  } catch (error: any) {
+    console.error("[v0] Error in PATCH lead:", error)
+    return NextResponse.json(
+      { ok: false, error: error.message },
+      { status: 500 }
+    )
   }
 }

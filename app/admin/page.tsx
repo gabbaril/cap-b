@@ -112,23 +112,30 @@ export default function AdminPage() {
     }
   }
 
-  const handleAssignLead = async (leadId: string, brokerId: string) => {
+  const handleAssignLead = async (leadId: string, brokerId: string | null) => {
     try {
-      const res = await fetch("/api/admin/assign-lead", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ leadId, brokerId }),
+      const res = await fetch(`/api/admin/leads/${leadId}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ brokerId }),
       })
 
-      if (res.ok) {
-        fetchData()
-        setSelectedLead(null)
-        setAssignToBroker("")
+      if (!res.ok) {
+        const error = await res.json()
+        console.error("Failed to assign lead:", error)
+        return
       }
+
+      fetchData()
+      setSelectedLead(null)
+      setAssignToBroker("")
     } catch (error) {
       console.error("Error assigning lead:", error)
     }
   }
+
 
   const handleCreateBroker = async (e: React.FormEvent) => {
     e.preventDefault()

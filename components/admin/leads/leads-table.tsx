@@ -35,7 +35,7 @@ interface LeadsTableProps {
   selectedLead: string | null
   assignToBroker: string
   setAssignToBroker: (value: string) => void
-  handleAssignLead: (leadId: string, brokerId: string) => void
+  handleAssignLead: (leadId: string, brokerId: string | null) => void
   getStatusColor: (status: string) => string
 }
 
@@ -99,6 +99,7 @@ export function LeadsTable({
                 </TableCell>
                 <TableCell>
                   {selectedLead === lead.id ? (
+                    /* ---------------- ASSIGN MODE ---------------- */
                     <div className="flex gap-2">
                       <Select value={assignToBroker} onValueChange={setAssignToBroker}>
                         <SelectTrigger className="w-[180px]">
@@ -114,6 +115,7 @@ export function LeadsTable({
                             ))}
                         </SelectContent>
                       </Select>
+
                       <Button
                         size="sm"
                         onClick={() => handleAssignLead(lead.id, assignToBroker)}
@@ -121,6 +123,7 @@ export function LeadsTable({
                       >
                         OK
                       </Button>
+
                       <Button
                         size="sm"
                         variant="outline"
@@ -133,10 +136,27 @@ export function LeadsTable({
                       </Button>
                     </div>
                   ) : (
+                    /* ---------------- DEFAULT MODE ---------------- */
                     <div className="flex gap-2">
-                      <Button size="sm" variant="outline" onClick={() => onAssignClick(lead.id)}>
-                        Assigner
-                      </Button>
+                      {lead.assigned_to ? (
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="text-orange-600 hover:text-orange-700 hover:bg-orange-50 bg-transparent"
+                          onClick={() => handleAssignLead(lead.id, null)}
+                        >
+                          Désassigner
+                        </Button>
+                      ) : (
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => onAssignClick(lead.id)}
+                        >
+                          Assigner
+                        </Button>
+                      )}
+
                       <Button
                         size="sm"
                         variant="outline"
