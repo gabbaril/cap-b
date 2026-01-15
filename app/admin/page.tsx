@@ -605,6 +605,7 @@ export default function AdminPage() {
           <TabsContent value="passwords">
             <PasswordsPanel
               users={users}
+              brokers={brokers}
               onOpenReset={(user) => {
                 setSelectedUser(user)
                 setShowPasswordModal(true)
