@@ -3,23 +3,23 @@ import { CheckCircle2 } from "lucide-react"
 const benefits = [
   {
     title: "Leads exclusifs",
-    description: "Vos leads ne sont pas revendus à 10 concurrents. Vous obtenez un avantage réel.",
+    description: "Pas de leads brûlés. Pas de revente massive. Un vrai avantage concurrentiel sur votre marché.",
   },
   {
     title: "Qualification avant livraison",
-    description: "Chaque lead est vérifié selon des critères spécifiques avant d'arriver dans votre pipeline.",
+    description: "Chaque lead est vérifié et qualifié selon des critères spécifiques avant d'arriver dans votre pipeline.",
   },
   {
     title: "Transparence totale des données",
-    description: "Accès complet aux métriques, sources et performances de vos campagnes.",
+    description: "Vous savez exactement d’où vient chaque lead, ce qu’il vous coûte et ce qu’il vous rapporte.",
   },
   {
     title: "Aucun bullshit marketing",
-    description: "Pas de vanity metrics. On mesure ce qui compte : coût par opportunité réelle.",
+    description: "Pas de vanity metrics. On mesure uniquement ce qui impacte vos revenus.",
   },
   {
     title: "Focus sur le coût par opportunité",
-    description: "Notre objectif est votre rentabilité, pas le volume de leads inutiles.",
+    description: "Notre objectif n’est pas de livrer plus de leads, mais plus d’opportunités rentables.",
   },
 ]
 

@@ -21,7 +21,7 @@ export function StatsSection() {
         <div className="mt-16 p-8 bg-card border border-border rounded-2xl">
           <div className="max-w-3xl mx-auto text-center">
             <p className="text-lg text-muted-foreground italic mb-4">
-              "Approche utilisée quotidiennement sur nos propres projets. Nous mangeons notre propre cuisine."
+              "Notre succès dépend directement du vôtre."
             </p>
             <p className="text-sm text-muted-foreground">— L'équipe CAP-B</p>
           </div>
