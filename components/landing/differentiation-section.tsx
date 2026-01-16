@@ -30,13 +30,13 @@ export function DifferentiationSection() {
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           <div>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight mb-6 text-balance">
-              Pourquoi nos clients
+              Pourquoi notre modèle fonctionne
               <br />
-              <span className="text-muted-foreground">nous choisissent</span>
+              <span className="text-muted-foreground">(quand les autres échouent)</span>
             </h2>
             <p className="text-lg text-muted-foreground leading-relaxed mb-8">
               Nous ne vendons pas de la visibilité. Nous livrons des opportunités d'affaires qualifiées qui se
-              transforment en revenus.
+              transforment en revenus. Notre modèle est conçu pour des partenaires qui veulent des résultats mesurables, pas des promesses marketing
             </p>
           </div>
 
