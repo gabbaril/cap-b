@@ -2,24 +2,31 @@ import type React from "react"
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
-import Script from "next/script"
 import "./globals.css"
 
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Évaluation de Propriété Gratuite au Québec | ValeurMaisonRapide",
+  title: "CAP-B | Génération de Leads Qualifiés",
   description:
-    "Obtenez une évaluation gratuite et stratégique de votre propriété. Analyse basée sur des données réelles du marché local. Sans engagement.",
+    "CAP-B aide les entreprises de services à générer des opportunités d'affaires prévisibles grâce à des systèmes de génération de leads performants.",
   generator: "v0.app",
   icons: {
     icon: [
-      { url: "/favicon.ico", sizes: "any" },
-      { url: "/favicon-32x32.png", type: "image/png", sizes: "32x32" },
-      { url: "/favicon-16x16.png", type: "image/png", sizes: "16x16" },
+      {
+        url: "/icon-light-32x32.png",
+        media: "(prefers-color-scheme: light)",
+      },
+      {
+        url: "/icon-dark-32x32.png",
+        media: "(prefers-color-scheme: dark)",
+      },
+      {
+        url: "/icon.svg",
+        type: "image/svg+xml",
+      },
     ],
-    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
-    shortcut: "/favicon.ico",
+    apple: "/apple-icon.png",
   },
 }
 
@@ -28,30 +35,11 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  const googleMapsApiKey = process.env.GOOGLE_MAPS_API_KEY
-
   return (
     <html lang="fr">
-      <head>
-        <Script src="https://www.googletagmanager.com/gtag/js?id=AW-17852385943" strategy="afterInteractive" />
-        <Script id="google-ads-gtag" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'AW-17852385943');
-          `}
-        </Script>
-      </head>
-      <body className={`${inter.className} font-sans antialiased`}>
+      <body className={`font-sans antialiased`}>
         {children}
         <Analytics />
-        {googleMapsApiKey && (
-          <Script
-            src={`https://maps.googleapis.com/maps/api/js?key=${googleMapsApiKey}&libraries=places`}
-            strategy="lazyOnload"
-          />
-        )}
       </body>
     </html>
   )

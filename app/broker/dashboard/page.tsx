@@ -9,6 +9,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { getSupabaseBrowser } from "@/lib/supabase-client"
 import { LeadsToolbar } from "@/components/admin/leads/leads-toolbar"
+import { BrokerResetPasswordDialog } from "@/components/broker/reset-password-dialog"
 
 interface Lead {
   id: string
@@ -25,10 +26,15 @@ interface Lead {
 }
 
 interface BrokerProfile {
+  id: string
   full_name: string
   email: string
   company_name: string | null
   territory: string | null
+}
+
+interface User {
+  email: string
 }
 
 export default function BrokerDashboard() {
@@ -40,6 +46,7 @@ export default function BrokerDashboard() {
   const [propertyTypeFilter, setPropertyTypeFilter] = useState("all")
   const [sort, setSort] = useState<"desc" | "asc">("desc")
   const router = useRouter()
+  const [showPasswordModal, setShowPasswordModal] = useState(false)
 
   useEffect(() => {
     checkAuth()
@@ -84,6 +91,39 @@ export default function BrokerDashboard() {
     } finally {
       setLoading(false)
     }
+  }
+  
+  const supabase = getSupabaseBrowser()
+
+  const handleExport = async () => {
+    const { data: { session } } = await supabase.auth.getSession()
+
+    if (!session?.access_token) {
+      alert("Vous devez être connecté")
+      return
+    }
+
+    const res = await fetch("/api/broker/leads/export", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${session.access_token}`,
+      },
+    })
+
+    if (!res.ok) {
+      const text = await res.text()
+      console.error("Export error:", text)
+      alert("Erreur lors de l'export")
+      return
+    }
+
+    const blob = await res.blob()
+    const url = window.URL.createObjectURL(blob)
+    const link = document.createElement("a")
+    link.href = url
+    link.download = "leads.csv"
+    link.click()
+    window.URL.revokeObjectURL(url)
   }
 
   const handleStatusChange = async (leadId: string, newStatus: string) => {
@@ -176,8 +216,6 @@ export default function BrokerDashboard() {
     return Array.from(new Set(leads.map((l) => l.property_type).filter(Boolean)))
   }, [leads])
 
-
-
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 p-6 flex items-center justify-center">
@@ -199,9 +237,19 @@ export default function BrokerDashboard() {
               </p>
             )}
           </div>
-          <Button variant="outline" onClick={handleLogout}>
-            Déconnexion
-          </Button>
+          <div>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => setShowPasswordModal(true)}
+              className="mr-2"
+            >
+              Changer mon mot de passe
+            </Button>
+            <Button variant="outline" onClick={handleLogout}>
+              Déconnexion
+            </Button>
+          </div>
         </div>
       </div>
 
@@ -232,8 +280,13 @@ export default function BrokerDashboard() {
         </div>
 
         <Card className="p-6">
-          <h2 className="text-xl font-bold text-gray-900 mb-4">Mes Leads</h2>
-
+          <div className="flex justify-between">
+            <h2 className="text-xl font-bold text-gray-900 mb-4">Mes Leads</h2>
+            <Button variant="outline" size="sm" onClick={handleExport}>
+              Exporter mes leads CSV
+            </Button>
+          </div>
+          
           <LeadsToolbar
             search={search}
             setSearch={setSearch}
@@ -332,8 +385,14 @@ export default function BrokerDashboard() {
             </div>
           )}
         </Card>
-
+      
       </div>
+
+      <BrokerResetPasswordDialog
+        open={showPasswordModal}
+        onOpenChange={setShowPasswordModal}
+      />
+
     </div>
   )
 }
