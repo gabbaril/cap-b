@@ -2,12 +2,12 @@ import { CheckCircle2 } from "lucide-react"
 
 const benefits = [
   {
-    title: "Leads exclusifs ou semi-exclusifs",
+    title: "Leads exclusifs",
     description: "Vos leads ne sont pas revendus à 10 concurrents. Vous obtenez un avantage réel.",
   },
   {
     title: "Qualification avant livraison",
-    description: "Chaque lead est vérifié selon vos critères avant d'arriver dans votre pipeline.",
+    description: "Chaque lead est vérifié selon des critères spécifiques avant d'arriver dans votre pipeline.",
   },
   {
     title: "Transparence totale des données",

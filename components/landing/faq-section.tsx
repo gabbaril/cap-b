@@ -6,7 +6,7 @@ const faqs = [
   {
     question: "Les leads sont-ils exclusifs ?",
     answer:
-      "Oui, nous offrons des leads exclusifs ou semi-exclusifs selon votre forfait. Contrairement aux grandes plateformes qui revendent les mêmes contacts à plusieurs entreprises, vos leads vous appartiennent.",
+      "Oui, nous offrons des leads exclusifs. Contrairement aux grandes plateformes qui revendent les mêmes contacts à plusieurs entreprises, vos leads vous appartiennent.",
   },
   {
     question: "Quels secteurs acceptez-vous ?",
@@ -16,7 +16,7 @@ const faqs = [
   {
     question: "Comment sont qualifiés les leads ?",
     answer:
-      "Chaque lead passe par notre processus de qualification en plusieurs étapes : vérification des coordonnées, validation de l'intention d'achat, et matching avec vos critères spécifiques avant livraison.",
+      "Chaque lead passe par notre processus de qualification en plusieurs étapes : vérification des coordonnées, validation de l'intention, et matching avec des critères spécifiques avant livraison.",
   },
   {
     question: "Quel est l'engagement minimum ?",

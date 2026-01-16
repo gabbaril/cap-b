@@ -11,7 +11,7 @@ const steps = [
     number: "2",
     icon: Filter,
     title: "Qualification des leads",
-    description: "Chaque lead est qualifié selon vos critères avant d'être livré.",
+    description: "Chaque lead est qualifié selon des critères spécifiques, et ce, avant d'être livré.",
   },
   {
     number: "3",
