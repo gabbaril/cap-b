@@ -14,13 +14,13 @@ export function Footer() {
 
           <div className="flex flex-col items-center md:items-end gap-2">
             <a
-              href="mailto:contact@accelerateur.com"
+              href="mailto:info@cap-b.ca"
               className="text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
-              contact@accelerateur.com
+              info@cap-b.ca
             </a>
             <p className="text-xs text-muted-foreground">
-              © {new Date().getFullYear()} Accélérateur. Tous droits réservés.
+              © {new Date().getFullYear()} CAP-B Inc. Tous droits réservés.
             </p>
           </div>
         </div>

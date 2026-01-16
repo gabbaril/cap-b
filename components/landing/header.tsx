@@ -33,7 +33,9 @@ export function Header() {
 
           <div className="hidden md:flex items-center gap-3">
             <Button variant="ghost" size="sm">
-              Connexion
+              <a href="/broker/login">
+                Connexion
+              </a>
             </Button>
             <Button size="sm">Recevoir des leads</Button>
           </div>
