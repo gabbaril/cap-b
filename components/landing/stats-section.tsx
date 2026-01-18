@@ -25,7 +25,7 @@ export function StatsSection() {
         <div className="mt-16 p-8 bg-card border border-border rounded-2xl transition-all duration-150 ease-out hover:border-foreground/10 hover:shadow-lg">
           <div className="max-w-3xl mx-auto text-center">
             <p className="text-lg text-muted-foreground italic mb-4">"Notre succès dépend directement du vôtre."</p>
-            <p className="text-sm text-muted-foreground">— L'équipe CAP2B</p>
+            <p className="text-sm text-muted-foreground">— L'équipe CaP2B</p>
           </div>
         </div>
       </div>

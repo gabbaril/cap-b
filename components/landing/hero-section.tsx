@@ -103,7 +103,7 @@ export function HeroSection() {
             </h1>
 
             <p className="text-lg text-muted-foreground max-w-xl leading-relaxed">
-              CAP-B aide les entreprises de services au Québec à générer des opportunités d'affaires réelles grâce à des
+              Cap2B aide les entreprises de services au Québec à générer des opportunités d'affaires réelles grâce à des
               systèmes de génération de leads performants et mesurables.
             </p>
 

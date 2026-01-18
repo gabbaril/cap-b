@@ -7,9 +7,9 @@ import "./globals.css"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "CAP-B | Génération de Leads Qualifiés",
+  title: "Cap2B | Génération de Leads Qualifiés",
   description:
-    "CAP-B aide les entreprises de services à générer des opportunités d'affaires prévisibles grâce à des systèmes de génération de leads performants.",
+    "Cap2B aide les entreprises de services à générer des opportunités d'affaires prévisibles grâce à des systèmes de génération de leads performants.",
   generator: "v0.app",
   icons: {
     icon: [

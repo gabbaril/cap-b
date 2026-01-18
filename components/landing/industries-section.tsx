@@ -1,12 +1,12 @@
 import { Building2, Scale, HardHat, Wallet, Heart, Briefcase } from "lucide-react"
 
 const industries = [
-  { icon: Building2, name: "Courtiers immobiliers" },
-  { icon: HardHat, name: "Entrepreneurs en construction" },
-  { icon: Scale, name: "Avocats et notaires" },
-  { icon: Wallet, name: "Services financiers" },
-  { icon: Heart, name: "Cliniques privées" },
-  { icon: Briefcase, name: "Services professionnels locaux" },
+  { icon: Building2, name: "Courtiers immobiliers", available: true },
+  { icon: HardHat, name: "Entrepreneurs en construction", available: false },
+  { icon: Scale, name: "Avocats et notaires", available: false },
+  { icon: Wallet, name: "Services financiers", available: false },
+  { icon: Heart, name: "Cliniques privées", available: false },
+  { icon: Briefcase, name: "Services professionnels locaux", available: false },
 ]
 
 export function IndustriesSection() {
@@ -25,10 +25,23 @@ export function IndustriesSection() {
           {industries.map((industry, index) => (
             <div
               key={index}
-              className="reveal bg-card border border-border rounded-xl p-6 transition-all duration-150 ease-out hover:border-foreground/20 hover:-translate-y-0.5 hover:shadow-lg text-center group"
+              className={`reveal bg-card border rounded-xl p-6 transition-all duration-150 ease-out text-center group relative ${
+                industry.available 
+                  ? "border-primary/30 hover:border-primary/50 hover:-translate-y-0.5 hover:shadow-lg" 
+                  : "border-border hover:border-foreground/20"
+              }`}
               style={{ transitionDelay: `${index * 60}ms` }}
             >
-              <div className="p-4 rounded-lg bg-secondary w-fit mx-auto mb-4 transition-all duration-150 ease-out group-hover:bg-foreground group-hover:text-background">
+              {!industry.available && (
+                <span className="absolute top-3 right-3 text-[10px] font-medium text-muted-foreground/70 bg-secondary/80 px-2 py-0.5 rounded">
+                  Bientot disponible
+                </span>
+              )}
+              <div className={`p-4 rounded-lg w-fit mx-auto mb-4 transition-all duration-150 ease-out ${
+                industry.available 
+                  ? "bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground" 
+                  : "bg-secondary group-hover:bg-foreground group-hover:text-background"
+              }`}>
                 <industry.icon className="h-6 w-6" />
               </div>
               <h3 className="font-medium">{industry.name}</h3>

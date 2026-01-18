@@ -13,7 +13,7 @@ export function Header() {
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 bg-foreground rounded-sm" />
-            <span className="font-semibold text-lg tracking-tight">CAP2B</span>
+            <span className="font-semibold text-lg tracking-tight">Cap2B</span>
           </div>
 
           <nav className="hidden md:flex items-center gap-8">
