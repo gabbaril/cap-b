@@ -52,10 +52,6 @@ export default function AdminPage() {
     territory: "",
   })
 
-  const [selectedLeadDetails, setSelectedLeadDetails] = useState<Lead | null>(null)
-  const [showDetailsModal, setShowDetailsModal] = useState(false)
-  const [loadingDetails, setLoadingDetails] = useState(false)
-
   const [showDisqualifyDialog, setShowDisqualifyDialog] = useState(false)
   const [selectedLeadForDisqualify, setSelectedLeadForDisqualify] = useState<Lead | null>(null)
   const [disqualifyTemplate, setDisqualifyTemplate] = useState("standard")
@@ -259,22 +255,6 @@ export default function AdminPage() {
       setDeleteUserError(error.message)
     } finally {
       setIsDeletingUser(false)
-    }
-  }
-
-  const handleViewDetails = async (leadId: string) => {
-    setLoadingDetails(true)
-    setShowDetailsModal(true)
-    try {
-      const res = await fetch(`/api/admin/leads/${leadId}`)
-      if (res.ok) {
-        const data = await res.json()
-        setSelectedLeadDetails(data)
-      }
-    } catch (error) {
-      console.error("Error fetching lead details:", error)
-    } finally {
-      setLoadingDetails(false)
     }
   }
 
@@ -577,7 +557,7 @@ export default function AdminPage() {
                 brokers={brokers}
                 onAssignClick={(leadId) => setSelectedLead(leadId)}
                 onDisqualifyClick={handleDisqualify}
-                onViewDetails={handleViewDetails}
+                onOpenLead={handleOpenLead}
                 selectedLead={selectedLead}
                 assignToBroker={assignToBroker}
                 setAssignToBroker={setAssignToBroker}
@@ -625,7 +605,6 @@ export default function AdminPage() {
         onOpenChange={setDrawerOpen}
         lead={drawerLead}
         brokers={brokers}
-        onViewDetails={handleViewDetails}
         handleAssignLead={handleAssignLead}
         onDisqualify={handleDisqualify}
         onOpenEcm={handleOpenEcm}
