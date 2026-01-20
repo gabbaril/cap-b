@@ -11,39 +11,34 @@ import {
   AlertDialogAction,
 } from "@/components/ui/alert-dialog"
 
-interface User {
-  id: string
-  email: string
-}
-
-interface DeleteUserDialogProps {
+interface ConfirmDeleteDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
-  user: User | null
+  title: string
+  description: React.ReactNode
   onConfirm: () => void
-  isDeleting: boolean
+  isDeleting?: boolean
   error?: string
+  confirmLabel?: string
 }
 
-export function DeleteUserDialog({
+export function ConfirmDeleteDialog({
   open,
   onOpenChange,
-  user,
+  title,
+  description,
   onConfirm,
-  isDeleting,
+  isDeleting = false,
   error,
-}: DeleteUserDialogProps) {
+  confirmLabel = "Supprimer",
+}: ConfirmDeleteDialogProps) {
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>
-            Supprimer cet utilisateur ?
-          </AlertDialogTitle>
+          <AlertDialogTitle>{title}</AlertDialogTitle>
           <AlertDialogDescription>
-            Cette action est <strong>irréversible</strong>.
-            <br />
-            L’utilisateur <strong>{user?.email}</strong> sera supprimé définitivement.
+            {description}
           </AlertDialogDescription>
         </AlertDialogHeader>
 
@@ -60,7 +55,7 @@ export function DeleteUserDialog({
             disabled={isDeleting}
             className="bg-red-600 hover:bg-red-700"
           >
-            {isDeleting ? "Suppression..." : "Supprimer"}
+            {isDeleting ? "Suppression..." : confirmLabel}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

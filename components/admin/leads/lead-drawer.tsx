@@ -41,11 +41,11 @@ interface LeadDrawerProps {
   onOpenChange: (open: boolean) => void
   lead: Lead | null
   brokers: Broker[]
-  onViewDetails: (leadId: string) => void
   handleAssignLead: (leadId: string, brokerId: string | null) => void
   onDisqualify: (lead: Lead) => void
   onOpenEcm: (lead: Lead) => void
   getStatusColor: (status: string) => string
+  onDelete: (lead: Lead) => void
 }
 
 export function LeadDrawer({
@@ -53,11 +53,11 @@ export function LeadDrawer({
   onOpenChange,
   lead,
   brokers,
-  onViewDetails,
   handleAssignLead,
   onDisqualify,
   onOpenEcm,
   getStatusColor,
+  onDelete,
 }: LeadDrawerProps) {
   const [selectedBroker, setSelectedBroker] = useState<string | "none">("")
   const [activeTab, setActiveTab] = useState("resume")
@@ -281,7 +281,7 @@ export function LeadDrawer({
 
               <div className="border rounded-lg p-4">
                 <h4 className="font-semibold text-gray-900 mb-1">Assigner le lead</h4>
-                <p className="text-sm text-gray-500 mb-4">Choisissez un courtier pour ce lead</p>
+                <p className="text-sm text-gray-500 mb-4">Choisir un courtier pour ce lead</p>
                 <div className="flex flex-col gap-3">
                   <Select value={selectedBroker} onValueChange={setSelectedBroker}>
                     <SelectTrigger className="w-full">
@@ -323,20 +323,41 @@ export function LeadDrawer({
                 </div>
               </div>
 
-              <div className="border border-red-200 rounded-lg p-4 bg-red-50">
-                <h4 className="font-semibold text-red-900 mb-1">Disqualifier le lead</h4>
-                <p className="text-sm text-red-600 mb-4">Envoyer un email de disqualification au client</p>
+              <div className="border border-purple-200 rounded-lg p-4 bg-purple-50">
+                <h4 className="font-semibold text-purple-900 mb-1">Envoyer un courriel</h4>
+                <p className="text-sm text-purple-600 mb-4">Envoyer un email à partir des différents gabarits</p>
                 <Button
                   variant="outline"
-                  className="w-full border-red-300 text-red-700 hover:bg-red-100 hover:text-red-800 bg-transparent"
+                  className="w-full border-purple-300 text-purple-700 hover:bg-purple-100 hover:text-purple-800 bg-transparent"
                   onClick={() => {
                     onDisqualify(lead)
                     onOpenChange(false)
                   }}
                 >
-                  Disqualifier et envoyer l'email
+                  Sélectionner et envoyer l'email
                 </Button>
               </div>
+
+              <div className="border border-red-200 rounded-lg p-4 bg-red-50">
+                <h4 className="font-semibold text-red-900 mb-1">
+                  Supprimer le lead
+                </h4>
+                <p className="text-sm text-red-700 mb-4">
+                  Cette action est irréversible.
+                </p>
+
+                <Button
+                  variant="destructive"
+                  className="w-full"
+                  onClick={() => {
+                    onDelete(lead)
+                    onOpenChange(false)
+                  }}
+                >
+                  Supprimer définitivement
+                </Button>
+              </div>
+
             </div>
           </TabsContent>
         </Tabs>

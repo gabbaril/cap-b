@@ -31,7 +31,7 @@ interface LeadsTableProps {
   brokers: Broker[]
   onAssignClick: (leadId: string) => void
   onDisqualifyClick: (lead: Lead) => void
-  onViewDetails: (leadId: string) => void
+  onOpenLead: (lead: Lead) => void
   selectedLead: string | null
   assignToBroker: string
   setAssignToBroker: (value: string) => void
@@ -44,7 +44,7 @@ export function LeadsTable({
   brokers,
   onAssignClick,
   onDisqualifyClick,
-  onViewDetails,
+  onOpenLead,
   selectedLead,
   assignToBroker,
   setAssignToBroker,
@@ -93,7 +93,7 @@ export function LeadsTable({
                   )}
                 </TableCell>
                 <TableCell>
-                  <Button size="sm" variant="outline" onClick={() => onViewDetails(lead.id)}>
+                  <Button size="sm" variant="outline" onClick={() => onOpenLead(lead)}>
                     Voir détails
                   </Button>
                 </TableCell>

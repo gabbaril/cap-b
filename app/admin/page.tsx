@@ -17,7 +17,7 @@ import { BrokersPanel } from "@/components/admin/clients/brokers-panel"
 import { PasswordsPanel } from "@/components/admin/users/passwords-panel"
 import { DisqualifyDialog } from "@/components/admin/modals/disqualify-dialog"
 import { ResetPasswordDialog } from "@/components/admin/modals/reset-password-dialog"
-import { DeleteUserDialog } from "@/components/admin/modals/delete-user-dialog"
+import { ConfirmDeleteDialog } from "@/components/admin/modals/confirm-delete-dialog"
 import { EcmDialog } from "@/components/admin/modals/ecm-dialog"
 import { Broker, Lead, User } from "@/types/admin"
 
@@ -52,10 +52,6 @@ export default function AdminPage() {
     territory: "",
   })
 
-  const [selectedLeadDetails, setSelectedLeadDetails] = useState<Lead | null>(null)
-  const [showDetailsModal, setShowDetailsModal] = useState(false)
-  const [loadingDetails, setLoadingDetails] = useState(false)
-
   const [showDisqualifyDialog, setShowDisqualifyDialog] = useState(false)
   const [selectedLeadForDisqualify, setSelectedLeadForDisqualify] = useState<Lead | null>(null)
   const [disqualifyTemplate, setDisqualifyTemplate] = useState("standard")
@@ -64,6 +60,11 @@ export default function AdminPage() {
   const [emailSubject, setEmailSubject] = useState("")
   const [emailBody, setEmailBody] = useState("")
   const [leadToken, setLeadToken] = useState<string | null>(null)
+
+  const [showDeleteLeadModal, setShowDeleteLeadModal] = useState(false)
+  const [leadToDelete, setLeadToDelete] = useState<Lead | null>(null)
+  const [isDeletingLead, setIsDeletingLead] = useState(false)
+  const [deleteLeadError, setDeleteLeadError] = useState("")
 
   const [showEcmDialog, setShowEcmDialog] = useState(false)
   const [selectedLeadForEcm, setSelectedLeadForEcm] = useState<Lead | null>(null)
@@ -136,6 +137,33 @@ export default function AdminPage() {
     }
   }
 
+  const handleDeleteLead = async () => {
+    if (!leadToDelete) return
+
+    setIsDeletingLead(true)
+    setDeleteLeadError("")
+
+    try {
+      const res = await fetch(`/api/admin/leads/${leadToDelete.id}`, {
+        method: "DELETE",
+      })
+
+      if (!res.ok) {
+        const data = await res.json()
+        throw new Error(data.error || "Erreur lors de la suppression")
+      }
+
+      setShowDeleteLeadModal(false)
+      setLeadToDelete(null)
+      setDrawerOpen(false)
+      fetchData()
+    } catch (error: any) {
+      console.error(error)
+      setDeleteLeadError(error.message)
+    } finally {
+      setIsDeletingLead(false)
+    }
+  }
 
   const handleCreateBroker = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -259,22 +287,6 @@ export default function AdminPage() {
       setDeleteUserError(error.message)
     } finally {
       setIsDeletingUser(false)
-    }
-  }
-
-  const handleViewDetails = async (leadId: string) => {
-    setLoadingDetails(true)
-    setShowDetailsModal(true)
-    try {
-      const res = await fetch(`/api/admin/leads/${leadId}`)
-      if (res.ok) {
-        const data = await res.json()
-        setSelectedLeadDetails(data)
-      }
-    } catch (error) {
-      console.error("Error fetching lead details:", error)
-    } finally {
-      setLoadingDetails(false)
     }
   }
 
@@ -577,7 +589,7 @@ export default function AdminPage() {
                 brokers={brokers}
                 onAssignClick={(leadId) => setSelectedLead(leadId)}
                 onDisqualifyClick={handleDisqualify}
-                onViewDetails={handleViewDetails}
+                onOpenLead={handleOpenLead}
                 selectedLead={selectedLead}
                 assignToBroker={assignToBroker}
                 setAssignToBroker={setAssignToBroker}
@@ -625,11 +637,14 @@ export default function AdminPage() {
         onOpenChange={setDrawerOpen}
         lead={drawerLead}
         brokers={brokers}
-        onViewDetails={handleViewDetails}
         handleAssignLead={handleAssignLead}
         onDisqualify={handleDisqualify}
         onOpenEcm={handleOpenEcm}
         getStatusColor={getStatusColor}
+        onDelete={(lead) => {
+          setLeadToDelete(lead)
+          setShowDeleteLeadModal(true)
+        }}
       />
 
       <DisqualifyDialog
@@ -668,13 +683,36 @@ export default function AdminPage() {
         }}
       />
 
-      <DeleteUserDialog
+      <ConfirmDeleteDialog
         open={showDeleteUserModal}
         onOpenChange={setShowDeleteUserModal}
-        user={selectedUserToDelete}
+        title="Supprimer cet utilisateur ?"
+        description={
+          <>
+            Cette action est <strong>irréversible</strong>.
+            <br />
+            L’utilisateur <strong>{selectedUserToDelete?.email}</strong> sera supprimé définitivement.
+          </>
+        }
         onConfirm={handleDeleteUser}
         isDeleting={isDeletingUser}
         error={deleteUserError}
+      />
+
+      <ConfirmDeleteDialog
+        open={showDeleteLeadModal}
+        onOpenChange={setShowDeleteLeadModal}
+        title="Supprimer ce lead ?"
+        description={
+          <>
+            Cette action est <strong>irréversible</strong>.
+            <br />
+            Le lead <strong>{leadToDelete?.full_name}</strong> sera supprimé définitivement.
+          </>
+        }
+        onConfirm={handleDeleteLead}
+        isDeleting={isDeletingLead}
+        error={deleteLeadError}
       />
 
       <EcmDialog open={showEcmDialog} onOpenChange={setShowEcmDialog} lead={selectedLeadForEcm} />

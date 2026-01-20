@@ -90,3 +90,38 @@ export async function PATCH(
     )
   }
 }
+
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id } = await params
+
+    const supabase = createClient(
+      supabaseUrl,
+      supabaseServiceKey
+    )
+
+    const { error } = await supabase
+      .from("leads")
+      .delete()
+      .eq("id", id)
+
+    if (error) {
+      console.error("[v0] Error deleting lead:", error)
+      return NextResponse.json(
+        { error: error.message },
+        { status: 500 }
+      )
+    }
+
+    return NextResponse.json({ ok: true })
+  } catch (error: any) {
+    console.error("[v0] Error in DELETE lead:", error)
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    )
+  }
+}
