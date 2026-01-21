@@ -99,7 +99,7 @@ export function HeroSection() {
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-balance leading-[1.1]">
               Accélérez la croissance de votre entreprise
               <br />
-              <span className="text-muted-foreground">avec des leads qualifiés</span>
+              <span className="text-accent">avec des leads qualifiés</span>
             </h1>
 
             <p className="text-lg text-muted-foreground max-w-xl leading-relaxed">
@@ -171,7 +171,7 @@ export function HeroSection() {
                       className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-border bg-secondary/50 text-foreground/80 text-xs font-medium"
                       aria-label={`Niveau d'intention: ${currentLead.intentLabel}`}
                     >
-                      <Flame className="h-3 w-3 text-orange-400" />
+                      <Flame className="h-3 w-3 text-accent" />
                       {currentLead.intentLabel}
                     </span>
                   </div>

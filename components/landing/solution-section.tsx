@@ -35,7 +35,7 @@ export function SolutionSection() {
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight mb-6 text-balance">
             Un accélérateur de croissance
             <br />
-            <span className="text-muted-foreground">pensé pour les entreprises d'ici</span>
+            <span className="text-accent">pensé pour les entreprises d'ici</span>
           </h2>
           <p className="text-lg text-muted-foreground leading-relaxed">
             Nous ne vendons pas du marketing. Nous livrons des opportunités d'affaires.

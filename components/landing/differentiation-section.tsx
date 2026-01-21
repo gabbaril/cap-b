@@ -33,7 +33,7 @@ export function DifferentiationSection() {
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight mb-6 text-balance">
               Pourquoi notre modèle fonctionne
               <br />
-              <span className="text-muted-foreground">(quand les autres échouent)</span>
+              <span className="text-accent">(quand les autres échouent)</span>
             </h2>
             <p className="text-lg text-muted-foreground leading-relaxed mb-8">
               Nous ne vendons pas de la visibilité. Nous livrons des opportunités d'affaires qualifiées qui se

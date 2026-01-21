@@ -31,7 +31,7 @@ export function ProblemsSection() {
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight mb-6 text-balance">
             Le problème n'est pas la visibilité.
             <br />
-            <span className="text-muted-foreground">C'est la qualité des opportunités.</span>
+            <span className="text-accent">C'est la qualité des opportunités.</span>
           </h2>
         </div>
 

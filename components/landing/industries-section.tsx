@@ -17,7 +17,7 @@ export function IndustriesSection() {
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight mb-6 text-balance">
             Pour les entreprises de services
             <br />
-            <span className="text-muted-foreground">ambitieuses</span>
+            <span className="text-accent">ambitieuses</span>
           </h2>
         </div>
 
