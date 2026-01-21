@@ -21,6 +21,7 @@ interface Lead {
   status: string
   assigned_to: string | null
   created_at: string
+  is_finalized?: boolean
 }
 
 interface LeadsKanbanProps {
@@ -66,6 +67,11 @@ export function LeadsKanban({ leads, brokers, onOpenLead, getStatusColor }: Lead
                     <Badge className={getStatusColor(lead.status)} variant="outline">
                       {lead.property_type}
                     </Badge>
+                    {lead.is_finalized && (
+                      <Badge variant="outline" className="border-green-500 text-green-700 bg-green-50 ml-1">
+                        Finalisé
+                      </Badge>
+                    )}
                     <div className="space-y-1 text-xs text-gray-600">
                       <div className="flex items-center gap-2">
                         <Mail className="h-3 w-3" />

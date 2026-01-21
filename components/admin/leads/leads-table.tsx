@@ -24,6 +24,7 @@ interface Lead {
   status: string
   assigned_to: string | null
   created_at: string
+  is_finalized?: boolean
 }
 
 interface LeadsTableProps {
@@ -73,7 +74,14 @@ export function LeadsTable({
             {leads.map((lead) => (
               <TableRow key={lead.id}>
                 <TableCell className="font-mono text-xs">{lead.lead_number}</TableCell>
-                <TableCell className="font-medium">{lead.full_name}</TableCell>
+                <TableCell className="font-medium">
+                  {lead.full_name}
+                  {lead.is_finalized && (
+                    <Badge variant="outline" className="border-green-500 text-green-700 bg-green-50 ml-1">
+                      Finalisé
+                    </Badge>
+                  )}
+                </TableCell>
                 <TableCell>
                   <div className="text-sm">
                     <div>{lead.email}</div>
