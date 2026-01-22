@@ -18,15 +18,14 @@ export default function LandingPage() {
   return (
     <main className="min-h-screen">
       <Header />
-      {/* Hero section without reveal - always visible immediately */}
       <HeroSection />
-      <ProblemsSection className="reveal" />
-      <SolutionSection className="reveal" />
-      <IndustriesSection className="reveal" />
-      <DifferentiationSection className="reveal" />
-      <StatsSection className="reveal" />
-      <FaqSection className="reveal" />
-      <CtaSection className="reveal" />
+      <ProblemsSection />
+      <SolutionSection />
+      <IndustriesSection />
+      <DifferentiationSection />
+      <StatsSection />
+      <FaqSection />
+      <CtaSection />
       <Footer />
     </main>
   )
