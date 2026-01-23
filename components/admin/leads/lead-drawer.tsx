@@ -5,7 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Mail, Phone, MapPin, Home, Calendar, Building2, Ruler, Wrench, Sparkles } from "lucide-react"
+import { Mail, Phone, MapPin, Home, Calendar, Building2, Ruler, Wrench, Sparkles, Target, FileClock, DollarSign } from "lucide-react"
 import { useState } from "react"
 
 interface Broker {
@@ -23,12 +23,19 @@ interface Lead {
   address: string
   city: string | null
   property_type: string
+  intention?: string
   status: string
   assigned_to: string | null
   created_at: string
   is_finalized?: boolean
+  sale_reason?: string
+  potential_sale_desire?: string
+  ideal_sale_deadline?: string
+  approximate_market_value?: string
   bedrooms_count?: number
   bathrooms_count?: number
+  basement_info?: string
+  floors_count?: number
   construction_year?: number
   approximate_area?: string
   garage?: string
@@ -68,7 +75,7 @@ export function LeadDrawer({
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="w-full sm:max-w-2xl overflow-y-auto">
+      <SheetContent className="w-full sm:max-w-2xl overflow-y-auto px-3">
         <SheetHeader className="pb-4 border-b">
           <SheetTitle className="text-xl">Détails du Lead</SheetTitle>
         </SheetHeader>
@@ -143,6 +150,16 @@ export function LeadDrawer({
 
                 <div className="flex items-start gap-3">
                   <div className="mt-0.5 p-2 bg-gray-100 rounded-lg">
+                    <Target className="h-4 w-4 text-gray-600" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-xs text-gray-500 mb-0.5">Intention</p>
+                    <p className="text-sm font-medium text-gray-900">{lead.intention ? lead.intention : "Non spécifiée"}</p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3">
+                  <div className="mt-0.5 p-2 bg-gray-100 rounded-lg">
                     <Calendar className="h-4 w-4 text-gray-600" />
                   </div>
                   <div className="flex-1">
@@ -157,6 +174,60 @@ export function LeadDrawer({
                   </div>
                 </div>
               </div>
+
+              {(lead.sale_reason || lead.potential_sale_desire || lead.ideal_sale_deadline || lead.approximate_market_value) && (
+                <div className="pt-4 border-t space-y-4">
+                  <h4 className="font-semibold text-gray-900 text-sm">Projet de vente</h4>
+
+                  {lead.sale_reason && (
+                    <div className="flex items-start gap-3">
+                      <div className="mt-0.5 p-2 bg-gray-100 rounded-lg">
+                        <Target className="h-4 w-4 text-gray-600" />
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-xs text-gray-500 mb-0.5">Raison de vente</p>
+                        <p className="text-sm font-medium text-gray-900">{lead.sale_reason}</p>
+                      </div>
+                    </div>
+                  )}
+
+                  {lead.potential_sale_desire && (
+                    <div className="flex items-start gap-3">
+                      <div className="mt-0.5 p-2 bg-gray-100 rounded-lg">
+                        <Target className="h-4 w-4 text-gray-600" />
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-xs text-gray-500 mb-0.5">Désir de vente</p>
+                        <p className="text-sm font-medium text-gray-900">{lead.potential_sale_desire}</p>
+                      </div>
+                    </div>
+                  )}
+
+                  {lead.ideal_sale_deadline && (
+                    <div className="flex items-start gap-3">
+                      <div className="mt-0.5 p-2 bg-gray-100 rounded-lg">
+                        <FileClock className="h-4 w-4 text-gray-600" />
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-xs text-gray-500 mb-0.5">Délai idéal</p>
+                        <p className="text-sm font-medium text-gray-900">{lead.ideal_sale_deadline}</p>
+                      </div>
+                    </div>
+                  )}
+
+                  {lead.approximate_market_value && (
+                    <div className="flex items-start gap-3">
+                      <div className="mt-0.5 p-2 bg-gray-100 rounded-lg">
+                        <DollarSign className="h-4 w-4 text-gray-600" />
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-xs text-gray-500 mb-0.5">Valeur approximative</p>
+                        <p className="text-sm font-medium text-gray-900">{lead.approximate_market_value}</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
 
               {lead.is_finalized && (
                 <div className="pt-4 border-t space-y-4">
@@ -182,6 +253,30 @@ export function LeadDrawer({
                       <div className="flex-1">
                         <p className="text-xs text-gray-500 mb-0.5">Salles de bain</p>
                         <p className="text-sm font-medium text-gray-900">{lead.bathrooms_count}</p>
+                      </div>
+                    </div>
+                  )}
+
+                  {lead.floors_count && (
+                    <div className="flex items-start gap-3">
+                      <div className="mt-0.5 p-2 bg-gray-100 rounded-lg">
+                        <Building2 className="h-4 w-4 text-gray-600" />
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-xs text-gray-500 mb-0.5">Nombre d'étages</p>
+                        <p className="text-sm font-medium text-gray-900">{lead.floors_count}</p>
+                      </div>
+                    </div>
+                  )}
+
+                  {lead.basement_info && (
+                    <div className="flex items-start gap-3">
+                      <div className="mt-0.5 p-2 bg-gray-100 rounded-lg">
+                        <Home className="h-4 w-4 text-gray-600" />
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-xs text-gray-500 mb-0.5">Sous-sol</p>
+                        <p className="text-sm font-medium text-gray-900">{lead.basement_info}</p>
                       </div>
                     </div>
                   )}
