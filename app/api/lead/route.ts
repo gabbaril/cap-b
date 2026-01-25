@@ -1,6 +1,7 @@
 import { Resend } from "resend"
 import { NextResponse } from "next/server"
 import { getSupabaseAdmin } from "@/lib/supabase-server"
+import { sendSms, isTwilioConfigured } from "@/lib/twilio"
 
 export async function POST(request: Request) {
   if (!process.env.RESEND_API_KEY) {
@@ -324,6 +325,18 @@ Si vous n'avez pas fait cette demande, vous pouvez ignorer ce message.`
       } catch (confirmError: any) {
         console.error("[v0] Erreur envoi confirmation au lead:", confirmError)
         console.error("[v0] Détails erreur:", confirmError.message)
+      }
+    }
+
+    // Send SMS notification to admin for new lead if configured
+    if (isTwilioConfigured() && process.env.ADMIN_PHONE_NUMBER) {
+      try {
+        const smsMessage = `🏠 Nouveau lead #${leadId}\n${fullName}\n${address}\n📞 ${phone}\n${propertyType}`
+        await sendSms(process.env.ADMIN_PHONE_NUMBER, smsMessage)
+        console.log("[v0] SMS de nouveau lead envoyé à l'admin")
+      } catch (smsError: any) {
+        console.error("[v0] Erreur envoi SMS nouveau lead:", smsError)
+        // Don't fail the request if SMS fails
       }
     }
 

@@ -334,6 +334,21 @@ export default function AdminPage() {
     setShowEcmDialog(true)
   }
 
+  const handleOpenSms = async (lead: Lead) => {
+    setSelectedLeadForSms(lead)
+    // Fetch the lead token for SMS templates that need it
+    try {
+      const res = await fetch(`/api/admin/lead-token/${lead.id}`)
+      if (res.ok) {
+        const data = await res.json()
+        setSmsLeadToken(data.token)
+      }
+    } catch (error) {
+      console.error("Error fetching lead token for SMS:", error)
+    }
+    setShowSmsDialog(true)
+  }
+  
   const getStatusColor = (status: string) => {
     switch (status) {
       case "unassigned":
@@ -644,12 +659,13 @@ export default function AdminPage() {
         brokers={brokers}
         handleAssignLead={handleAssignLead}
         onDisqualify={handleDisqualify}
-        onOpenEcm={handleOpenEcm}
-        getStatusColor={getStatusColor}
-        onDelete={(lead) => {
-          setLeadToDelete(lead)
-          setShowDeleteLeadModal(true)
-        }}
+          onOpenEcm={handleOpenEcm}
+          onOpenSms={handleOpenSms}
+          getStatusColor={getStatusColor}
+          onDelete={(lead) => {
+            setLeadToDelete(lead)
+            setShowDeleteLeadModal(true)
+          }}
       />
 
       <DisqualifyDialog
@@ -721,6 +737,16 @@ export default function AdminPage() {
       />
 
       <EcmDialog open={showEcmDialog} onOpenChange={setShowEcmDialog} lead={selectedLeadForEcm} />
-    </div>
+
+      <SmsDialog 
+        open={showSmsDialog} 
+        onOpenChange={setShowSmsDialog} 
+        lead={selectedLeadForSms}
+        leadToken={smsLeadToken}
+        onSuccess={() => {
+          fetchData()
+        }}
+      />
+      </div>
   )
 }

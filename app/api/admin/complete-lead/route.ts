@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server"
 import { getSupabaseAdmin } from "@/lib/supabase-server"
 import { Resend } from "resend"
+import { sendSms, isTwilioConfigured } from "@/lib/twilio"
 
 export async function POST(request: Request) {
   try {
@@ -270,6 +271,18 @@ export async function POST(request: Request) {
       } catch (emailError: any) {
         console.error("[v0] Erreur envoi email de finalisation:", emailError)
         // Don't fail the request if email fails
+      }
+    }
+
+    // Send SMS notification to admin if configured
+    if (isTwilioConfigured() && process.env.ADMIN_PHONE_NUMBER) {
+      try {
+        const smsMessage = `✅ Lead finalisé\n${leadData.full_name}\n${leadData.address}\n📞 ${leadData.phone}`
+        await sendSms(process.env.ADMIN_PHONE_NUMBER, smsMessage)
+        console.log("[v0] SMS de finalisation envoyé à l'admin")
+      } catch (smsError: any) {
+        console.error("[v0] Erreur envoi SMS de finalisation:", smsError)
+        // Don't fail the request if SMS fails
       }
     }
 
