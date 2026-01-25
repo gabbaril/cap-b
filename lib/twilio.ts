@@ -1,30 +1,48 @@
-import twilio from "twilio"
+// Dynamic import to avoid issues if twilio package is not installed
+let twilioModule: typeof import("twilio") | null = null
 
-const accountSid = process.env.TWILIO_ACCOUNT_SID
-const authToken = process.env.TWILIO_AUTH_TOKEN
-const twilioPhoneNumber = process.env.TWILIO_PHONE_NUMBER
+async function loadTwilio() {
+  if (!twilioModule) {
+    try {
+      twilioModule = await import("twilio")
+    } catch (e) {
+      console.error("[Twilio] Failed to load twilio package:", e)
+      return null
+    }
+  }
+  return twilioModule
+}
 
-let twilioClient: twilio.Twilio | null = null
+let twilioClient: any = null
 
-export function getTwilioClient() {
+export async function getTwilioClient() {
+  const accountSid = process.env.TWILIO_ACCOUNT_SID
+  const authToken = process.env.TWILIO_AUTH_TOKEN
+
   if (!accountSid || !authToken) {
     console.warn("[Twilio] TWILIO_ACCOUNT_SID ou TWILIO_AUTH_TOKEN non configuré")
     return null
   }
 
   if (!twilioClient) {
-    twilioClient = twilio(accountSid, authToken)
+    const twilio = await loadTwilio()
+    if (!twilio) return null
+    twilioClient = twilio.default(accountSid, authToken)
   }
 
   return twilioClient
 }
 
 export function getTwilioPhoneNumber() {
-  return twilioPhoneNumber
+  return process.env.TWILIO_PHONE_NUMBER
 }
 
 export function isTwilioConfigured() {
-  return !!(accountSid && authToken && twilioPhoneNumber)
+  return !!(
+    process.env.TWILIO_ACCOUNT_SID && 
+    process.env.TWILIO_AUTH_TOKEN && 
+    process.env.TWILIO_PHONE_NUMBER
+  )
 }
 
 /**
@@ -59,18 +77,26 @@ export async function sendSms(to: string, message: string): Promise<{
   messageId?: string
   error?: string
 }> {
-  const client = getTwilioClient()
+  const client = await getTwilioClient()
   const fromNumber = getTwilioPhoneNumber()
 
-  if (!client || !fromNumber) {
+  if (!client) {
     return {
       success: false,
-      error: "Twilio n'est pas configuré. Vérifiez les variables d'environnement.",
+      error: "Twilio client non disponible. Vérifiez que le package twilio est installé et les variables d'environnement configurées.",
+    }
+  }
+
+  if (!fromNumber) {
+    return {
+      success: false,
+      error: "TWILIO_PHONE_NUMBER non configuré.",
     }
   }
 
   try {
     const formattedTo = formatPhoneForTwilio(to)
+    console.log(`[Twilio] Envoi SMS de ${fromNumber} vers ${formattedTo}`)
 
     const result = await client.messages.create({
       body: message,
@@ -87,9 +113,15 @@ export async function sendSms(to: string, message: string): Promise<{
   } catch (error: any) {
     console.error("[Twilio] Erreur envoi SMS:", error)
 
+    // Extract more useful error message from Twilio errors
+    let errorMessage = error.message || "Erreur lors de l'envoi du SMS"
+    if (error.code) {
+      errorMessage = `Erreur Twilio ${error.code}: ${errorMessage}`
+    }
+
     return {
       success: false,
-      error: error.message || "Erreur lors de l'envoi du SMS",
+      error: errorMessage,
     }
   }
 }
