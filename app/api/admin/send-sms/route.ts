@@ -4,16 +4,23 @@ import { getSmsTemplateById, replaceSmsVariables } from "@/lib/sms-templates"
 import { getSupabaseAdmin } from "@/lib/supabase-server"
 
 export async function POST(request: Request) {
+  console.log("[v0] send-sms API called")
+  
   try {
     // Check if Twilio is configured
-    if (!isTwilioConfigured()) {
+    const configured = isTwilioConfigured()
+    console.log("[v0] Twilio configured:", configured)
+    
+    if (!configured) {
+      console.log("[v0] Twilio env vars - SID:", !!process.env.TWILIO_ACCOUNT_SID, "TOKEN:", !!process.env.TWILIO_AUTH_TOKEN, "PHONE:", !!process.env.TWILIO_PHONE_NUMBER)
       return NextResponse.json(
-        { ok: false, error: "Twilio n'est pas configuré" },
+        { ok: false, error: "Twilio n'est pas configuré. Vérifiez TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN et TWILIO_PHONE_NUMBER." },
         { status: 500 }
       )
     }
 
     const body = await request.json()
+    console.log("[v0] Request body:", { ...body, customMessage: body.customMessage?.substring(0, 50) })
     const {
       leadId,
       leadPhone,
@@ -65,7 +72,9 @@ export async function POST(request: Request) {
     }
 
     // Send SMS
+    console.log("[v0] Sending SMS to:", leadPhone, "message length:", message.length)
     const result = await sendSms(leadPhone, message)
+    console.log("[v0] SMS result:", result)
 
     if (!result.success) {
       return NextResponse.json(

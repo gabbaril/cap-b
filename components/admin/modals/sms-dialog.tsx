@@ -103,7 +103,7 @@ export function SmsDialog({
           leadPhone: selectedLead.phone,
           leadName: selectedLead.full_name,
           templateId: selectedTemplate,
-          customMessage: selectedTemplate === "custom" ? customMessage : undefined,
+          customMessage: selectedTemplate === "custom" ? customMessage : previewMessage,
           variables: {
             address: selectedLead.address,
             finalizationUrl,
@@ -111,6 +111,17 @@ export function SmsDialog({
           },
         }),
       })
+
+      // Check if response is ok before parsing JSON
+      if (!response.ok) {
+        const text = await response.text()
+        console.error("[v0] SMS API error:", response.status, text)
+        setSendResult({ 
+          success: false, 
+          message: `Erreur serveur (${response.status}): ${text.substring(0, 100)}` 
+        })
+        return
+      }
 
       const data = await response.json()
 
@@ -125,6 +136,7 @@ export function SmsDialog({
         setSendResult({ success: false, message: data.error || "Erreur lors de l'envoi" })
       }
     } catch (error: any) {
+      console.error("[v0] SMS send error:", error)
       setSendResult({ success: false, message: error.message || "Erreur de connexion" })
     } finally {
       setIsSending(false)
