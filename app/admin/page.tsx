@@ -19,6 +19,7 @@ import { DisqualifyDialog } from "@/components/admin/modals/disqualify-dialog"
 import { ResetPasswordDialog } from "@/components/admin/modals/reset-password-dialog"
 import { ConfirmDeleteDialog } from "@/components/admin/modals/confirm-delete-dialog"
 import { EcmDialog } from "@/components/admin/modals/ecm-dialog"
+import { SmsDialog } from "@/components/admin/modals/sms-dialog"
 import { Broker, Lead, User } from "@/types/admin"
 
 export default function AdminPage() {
@@ -68,6 +69,10 @@ export default function AdminPage() {
 
   const [showEcmDialog, setShowEcmDialog] = useState(false)
   const [selectedLeadForEcm, setSelectedLeadForEcm] = useState<Lead | null>(null)
+
+  const [showSmsDialog, setShowSmsDialog] = useState(false)
+  const [selectedLeadForSms, setSelectedLeadForSms] = useState<Lead | null>(null)
+  const [smsLeadToken, setSmsLeadToken] = useState<string | null>(null)
 
   const [view, setView] = useState<"kanban" | "table">("kanban")
   const [search, setSearch] = useState("")

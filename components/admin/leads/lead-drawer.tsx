@@ -5,7 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Mail, Phone, MapPin, Home, Calendar, Building2, Ruler, Wrench, Sparkles, Target, FileClock, DollarSign } from "lucide-react"
+import { Mail, Phone, MapPin, Home, Calendar, Building2, Ruler, Wrench, Sparkles, Target, FileClock, DollarSign, MessageSquare } from "lucide-react"
 import { useState } from "react"
 
 interface Broker {
@@ -51,6 +51,7 @@ interface LeadDrawerProps {
   handleAssignLead: (leadId: string, brokerId: string | null) => void
   onDisqualify: (lead: Lead) => void
   onOpenEcm: (lead: Lead) => void
+  onOpenSms?: (lead: Lead) => void
   getStatusColor: (status: string) => string
   onDelete: (lead: Lead) => void
 }
@@ -63,6 +64,7 @@ export function LeadDrawer({
   handleAssignLead,
   onDisqualify,
   onOpenEcm,
+  onOpenSms,
   getStatusColor,
   onDelete,
 }: LeadDrawerProps) {
@@ -429,7 +431,27 @@ export function LeadDrawer({
                     onOpenChange(false)
                   }}
                 >
+                  <Mail className="h-4 w-4 mr-2" />
                   Sélectionner et envoyer l'email
+                </Button>
+              </div>
+
+              <div className="border border-green-200 rounded-lg p-4 bg-green-50">
+                <h4 className="font-semibold text-green-900 mb-1">Envoyer un SMS</h4>
+                <p className="text-sm text-green-600 mb-4">Envoyer un SMS à partir des différents gabarits</p>
+                <Button
+                  variant="outline"
+                  className="w-full border-green-300 text-green-700 hover:bg-green-100 hover:text-green-800 bg-transparent"
+                  onClick={() => {
+                    if (onOpenSms) {
+                      onOpenSms(lead)
+                      onOpenChange(false)
+                    }
+                  }}
+                  disabled={!onOpenSms}
+                >
+                  <MessageSquare className="h-4 w-4 mr-2" />
+                  Sélectionner et envoyer le SMS
                 </Button>
               </div>
 
